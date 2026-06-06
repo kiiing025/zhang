@@ -4,7 +4,16 @@ Zhang can be developed from this Windows repo without installing Android SDK, ma
 
 ## Fastest iPhone Path: Web App
 
-The GitHub Pages workflow builds the Flutter web app on every push to `main`.
+The GitHub Pages workflow builds the Flutter web app on every push to `main` and publishes the static files to a `gh-pages` branch.
+
+In GitHub, enable Pages once:
+
+1. Open the Zhang repository.
+2. Go to Settings > Pages.
+3. Set Source to Deploy from a branch.
+4. Set Branch to `gh-pages`.
+5. Set Folder to `/root`.
+6. Save.
 
 After the first successful Pages deployment, open this URL on iPhone Safari:
 

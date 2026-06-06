@@ -30,7 +30,9 @@ iOS builds require macOS and Xcode.
 
 ## iPhone Without Local SDKs
 
-Zhang now includes a Flutter web/PWA target and GitHub Pages deployment workflow. After GitHub Pages is enabled for Actions deployments, the iPhone-friendly web app will be available at:
+Zhang now includes a Flutter web/PWA target and GitHub Pages publishing workflow. After the first workflow creates the `gh-pages` branch, enable GitHub Pages once with Source set to "Deploy from a branch", Branch set to `gh-pages`, and Folder set to `/root`.
+
+After that, the iPhone-friendly web app will be available at:
 
 ```text
 https://kiiing025.github.io/zhang/

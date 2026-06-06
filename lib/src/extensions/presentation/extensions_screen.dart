@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../data/bundled_extension_registry.dart';
 import '../domain/extension_models.dart';
 
-class ExtensionsScreen extends StatelessWidget {
+class ExtensionsScreen extends StatefulWidget {
   const ExtensionsScreen({
     super.key,
     this.platform = AppPlatform.android,
@@ -14,9 +14,16 @@ class ExtensionsScreen extends StatelessWidget {
   final BundledExtensionRegistry? registry;
 
   @override
+  State<ExtensionsScreen> createState() => _ExtensionsScreenState();
+}
+
+class _ExtensionsScreenState extends State<ExtensionsScreen> {
+  final Map<String, bool> _enabledOverrides = {};
+
+  @override
   Widget build(BuildContext context) {
-    final extensionRegistry = registry ?? BundledExtensionRegistry();
-    final extensions = extensionRegistry.extensionsFor(platform);
+    final extensionRegistry = widget.registry ?? BundledExtensionRegistry();
+    final extensions = extensionRegistry.extensionsFor(widget.platform);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Extensions')),
@@ -28,24 +35,47 @@ class ExtensionsScreen extends StatelessWidget {
           for (final extension in extensions) ...[
             _ExtensionTile(
               extension: extension,
+              isEnabled: _enabledOverrides[extension.id] ?? extension.isEnabled,
               sourceCount: extensionRegistry
                   .sourcesForExtension(extension.id)
                   .length,
+              onEnabledChanged: (value) => _setEnabled(extension, value),
             ),
             const SizedBox(height: 12),
           ],
-          _GuardrailCard(platform: platform),
+          _GuardrailCard(platform: widget.platform),
         ],
+      ),
+    );
+  }
+
+  void _setEnabled(ZhangExtension extension, bool value) {
+    setState(() {
+      _enabledOverrides[extension.id] = value;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '${extension.displayName} ${value ? 'enabled' : 'disabled'}',
+        ),
       ),
     );
   }
 }
 
 class _ExtensionTile extends StatelessWidget {
-  const _ExtensionTile({required this.extension, required this.sourceCount});
+  const _ExtensionTile({
+    required this.extension,
+    required this.isEnabled,
+    required this.sourceCount,
+    required this.onEnabledChanged,
+  });
 
   final ZhangExtension extension;
+  final bool isEnabled;
   final int sourceCount;
+  final ValueChanged<bool> onEnabledChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +92,10 @@ class _ExtensionTile extends StatelessWidget {
             const SizedBox(height: 6),
             Text('Install source: ${extension.installSource}'),
             Text('$sourceCount ${sourceCount == 1 ? 'source' : 'sources'}'),
+            Text('Status: ${isEnabled ? 'Enabled' : 'Disabled'}'),
           ],
         ),
-        trailing: Switch(value: extension.isEnabled, onChanged: null),
+        trailing: Switch(value: isEnabled, onChanged: onEnabledChanged),
         isThreeLine: true,
       ),
     );

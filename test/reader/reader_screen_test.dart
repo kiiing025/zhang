@@ -39,6 +39,27 @@ void main() {
 
     expect(find.text('2 / 3'), findsOneWidget);
   });
+
+  testWidgets('bookmark button toggles the current page bookmark', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ReaderScreen(
+          chapterId: 'paged-chapter',
+          repository: _ThreePagesRepository(),
+        ),
+      ),
+    );
+
+    expect(find.byIcon(Icons.bookmark_add_outlined), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Bookmark page'));
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(Icons.bookmark), findsOneWidget);
+    expect(find.text('Bookmarked page 1'), findsOneWidget);
+  });
 }
 
 class _EmptyPagesRepository extends SeedLibraryRepository {

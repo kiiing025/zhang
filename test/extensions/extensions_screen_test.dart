@@ -30,4 +30,21 @@ void main() {
       findsOneWidget,
     );
   });
+
+  testWidgets('bundled extension switches can be toggled locally', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      const MaterialApp(home: ExtensionsScreen(platform: AppPlatform.android)),
+    );
+
+    final localFilesSwitch = find.byType(Switch).first;
+
+    expect(tester.widget<Switch>(localFilesSwitch).value, isTrue);
+
+    await tester.tap(localFilesSwitch);
+    await tester.pumpAndSettle();
+
+    expect(tester.widget<Switch>(localFilesSwitch).value, isFalse);
+  });
 }

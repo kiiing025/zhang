@@ -58,7 +58,7 @@ void main() {
 
     expect(find.text('Choose files'), findsOneWidget);
     expect(find.text('Choose folder'), findsOneWidget);
-    expect(find.text('Planned formats'), findsOneWidget);
+    expect(find.text('Supported formats'), findsOneWidget);
     expect(
       find.text('CBZ, ZIP, PDF, and image folders selected by the user.'),
       findsOneWidget,
@@ -72,8 +72,14 @@ void main() {
       find.widgetWithText(OutlinedButton, 'Choose folder'),
     );
 
-    expect(chooseFilesButton.onPressed, isNull);
-    expect(chooseFolderButton.onPressed, isNull);
+    expect(chooseFilesButton.onPressed, isNotNull);
+    expect(chooseFolderButton.onPressed, isNotNull);
+
+    await tester.tap(find.widgetWithText(FilledButton, 'Choose files'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('2 items ready to import'), findsOneWidget);
+    expect(find.text('Moonlit Atlas - Chapter 14.cbz'), findsOneWidget);
 
     await tester.tap(find.text('Settings'));
     await tester.pumpAndSettle();

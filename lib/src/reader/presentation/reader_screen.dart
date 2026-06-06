@@ -14,6 +14,7 @@ class ReaderScreen extends StatefulWidget {
 
 class _ReaderScreenState extends State<ReaderScreen> {
   late final PageController _controller;
+  final Set<int> _bookmarkedPages = {};
   int _pageIndex = 0;
 
   @override
@@ -42,11 +43,15 @@ class _ReaderScreenState extends State<ReaderScreen> {
         ),
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
-        actions: const [
+        actions: [
           IconButton(
             tooltip: 'Bookmark page',
-            onPressed: null,
-            icon: Icon(Icons.bookmark_add_outlined),
+            onPressed: pageCount == 0 ? null : _toggleBookmark,
+            icon: Icon(
+              _bookmarkedPages.contains(_pageIndex)
+                  ? Icons.bookmark
+                  : Icons.bookmark_add_outlined,
+            ),
           ),
         ],
       ),
@@ -88,6 +93,27 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 );
               },
             ),
+    );
+  }
+
+  void _toggleBookmark() {
+    final isBookmarked = _bookmarkedPages.contains(_pageIndex);
+    setState(() {
+      if (isBookmarked) {
+        _bookmarkedPages.remove(_pageIndex);
+      } else {
+        _bookmarkedPages.add(_pageIndex);
+      }
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          isBookmarked
+              ? 'Removed bookmark from page ${_pageIndex + 1}'
+              : 'Bookmarked page ${_pageIndex + 1}',
+        ),
+      ),
     );
   }
 }

@@ -15,12 +15,28 @@ void main() {
     expect(find.text('Rain Index'), findsOneWidget);
   });
 
-  testWidgets('search action is disabled until search exists', (tester) async {
+  testWidgets('search filters visible series', (tester) async {
     await tester.pumpWidget(const MaterialApp(home: LibraryScreen()));
 
-    final searchButton = tester.widget<IconButton>(find.byType(IconButton));
+    await tester.tap(find.byTooltip('Search library'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'Iron');
+    await tester.pumpAndSettle();
 
-    expect(searchButton.onPressed, isNull);
+    expect(find.text('Iron Plum'), findsOneWidget);
+    expect(find.text('Moonlit Atlas'), findsNothing);
+    expect(find.text('Rain Index'), findsNothing);
+  });
+
+  testWidgets('continue shelf opens the current reader chapter', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const MaterialApp(home: LibraryScreen()));
+
+    await tester.tap(find.text('Continue'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('1 / 3'), findsOneWidget);
   });
 
   testWidgets('opens selected series detail with active repository', (

@@ -102,5 +102,19 @@ void main() {
       ),
       findsOneWidget,
     );
+
+    await tester.tap(find.text('Theme'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Dark'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Dark'), findsOneWidget);
+
+    await tester.tap(find.text('Default reader mode'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Double page'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Double page'), findsOneWidget);
   });
 }

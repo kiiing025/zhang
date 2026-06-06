@@ -8,9 +8,16 @@ import '../settings/presentation/settings_screen.dart';
 import 'app_platform.dart';
 
 class AppShell extends StatefulWidget {
-  const AppShell({super.key, this.platform});
+  const AppShell({
+    super.key,
+    this.platform,
+    this.themeMode = ThemeMode.system,
+    this.onThemeModeChanged,
+  });
 
   final AppPlatform? platform;
+  final ThemeMode themeMode;
+  final ValueChanged<ThemeMode>? onThemeModeChanged;
 
   @override
   State<AppShell> createState() => _AppShellState();
@@ -26,7 +33,10 @@ class _AppShellState extends State<AppShell> {
       const LibraryScreen(),
       ExtensionsScreen(platform: platform),
       const ImportScreen(),
-      const SettingsScreen(),
+      SettingsScreen(
+        themeMode: widget.themeMode,
+        onThemeModeChanged: widget.onThemeModeChanged,
+      ),
     ];
 
     return Scaffold(

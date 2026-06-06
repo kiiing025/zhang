@@ -5,21 +5,33 @@ import 'app_platform.dart';
 import 'app_shell.dart';
 import 'app_theme.dart';
 
-class ZhangApp extends StatelessWidget {
+class ZhangApp extends StatefulWidget {
   const ZhangApp({super.key, this.platform});
 
   final AppPlatform? platform;
 
   @override
+  State<ZhangApp> createState() => _ZhangAppState();
+}
+
+class _ZhangAppState extends State<ZhangApp> {
+  ThemeMode _themeMode = ThemeMode.system;
+
+  @override
   Widget build(BuildContext context) {
-    final resolvedPlatform = platform ?? currentAppPlatform();
+    final resolvedPlatform = widget.platform ?? currentAppPlatform();
 
     return MaterialApp(
-      title: 'Zhāng',
+      title: 'Zh\u0101ng',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      home: AppShell(platform: resolvedPlatform),
+      themeMode: _themeMode,
+      home: AppShell(
+        platform: resolvedPlatform,
+        themeMode: _themeMode,
+        onThemeModeChanged: (mode) => setState(() => _themeMode = mode),
+      ),
     );
   }
 }
